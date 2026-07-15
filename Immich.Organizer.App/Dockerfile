@@ -5,7 +5,6 @@ FROM mcr.microsoft.com/dotnet/runtime:10.0 AS base
 USER $APP_UID
 WORKDIR /app
 
-
 # Этот этап используется для сборки проекта службы
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -14,12 +13,12 @@ COPY ["Immich.Organizer.App/Immich.Organizer.App.csproj", "Immich.Organizer.App/
 RUN dotnet restore "./Immich.Organizer.App/Immich.Organizer.App.csproj"
 COPY . .
 WORKDIR "/src/Immich.Organizer.App"
-RUN dotnet build "./Immich.Organizer.App.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./Immich.Organizer.App.csproj" -c $BUILD_CONFIGURATION -o /app/build -p:DockerBuild=true
 
 # Этот этап используется для публикации проекта службы, который будет скопирован на последний этап
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Immich.Organizer.App.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Immich.Organizer.App.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false /p:DockerBuild=true
 
 # Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
 FROM base AS final

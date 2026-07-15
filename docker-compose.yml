@@ -1,7 +1,7 @@
 version: "3.0.2"
 
 services:
-  Immich-Organizer-App:
+  immich-organizer-app:
     container_name: Immich_Organizer_App
     build:
       context: ./Immich.Organizer.App

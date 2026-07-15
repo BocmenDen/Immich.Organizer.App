@@ -1,7 +1,5 @@
 ﻿using Immich.Organizer.Core;
-using Immich.Organizer.Core.Models;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 using Newtonsoft.Json;
 
 namespace Immich.Organizer.App
@@ -41,7 +39,7 @@ namespace Immich.Organizer.App
                     return;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 loggerInit.LogCritical(e, "Не удалось десериализовать конфигурацию.");
             }
@@ -49,13 +47,16 @@ namespace Immich.Organizer.App
 
             var engine = await OrganizerEngine.Build(config!, loggerInit);
 
+            if (engine == null)
+                return;
+
             while (true)
             {
                 try
                 {
                     await engine.SynchronizeAsync(logger);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     using var scopeError = logger.BeginScope(nameof(Program));
                     logger.LogWarning(e, "При выполнении организации объектов произошла ошибка");

@@ -6,6 +6,6 @@ namespace Immich.Organizer.Core.Models
     {
         public ConflictResolutionMode Mode { get; init; } = ConflictResolutionMode.Remove;
         public Guid? TagId { get; init; }
-        public List<MetadataSearchDto> Filters { get; init; } = new();
+        public List<MetadataSearchDto> Filters { get; init; } = [];
     }
 }

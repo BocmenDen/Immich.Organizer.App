@@ -1,8 +1,5 @@
 ﻿using Immich.Organizer.Core.Models;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Immich.Organizer.Core
 {
@@ -22,7 +19,7 @@ namespace Immich.Organizer.Core
             }
         }
 
-        public static async Task<OrganizerEngine> Build(OrganizerEngineConfig organizerEngineConfig, ILogger buildLogger)
+        public static async Task<OrganizerEngine?> Build(OrganizerEngineConfig organizerEngineConfig, ILogger buildLogger)
         {
             List<OrganizerUser> organizerUsers = [];
 
@@ -31,6 +28,12 @@ namespace Immich.Organizer.Core
                 var userBuild = await OrganizerUser.Build(organizerEngineConfig.Host, user, buildLogger);
                 if (userBuild == null) continue;
                 organizerUsers.Add(userBuild);
+            }
+
+            if(organizerUsers.Count == 0)
+            {
+                buildLogger.LogWarning("Не удалось создать движок для группировки медиа т.к. данные конфигурации пустые или не корректны");
+                return null;
             }
 
             return new OrganizerEngine(organizerUsers);

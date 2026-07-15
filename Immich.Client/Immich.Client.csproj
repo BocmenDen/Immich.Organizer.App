@@ -14,7 +14,7 @@
 		</PackageReference>
 	</ItemGroup>
 
-	<Target Name="NSwag" AfterTargets="PreBuildEvent">
+	<Target Name="NSwag" AfterTargets="PreBuildEvent" Condition="'$(DockerBuild)' != 'true'">
 		<Exec Command="$(NSwagExe) openapi2csclient /input:immich-openapi-specs.json /classname:ImmichClient /namespace:Immich.Client /output:ImmichClient.cs /GenerateNullableReferenceTypes:true /GenerateOptionalPropertiesAsNullable:true" />
 	</Target>
 
