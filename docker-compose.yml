@@ -1,0 +1,13 @@
+version: "3.0.2"
+
+services:
+  Immich-Organizer-App:
+    container_name: Immich_Organizer_App
+    build:
+      context: ./Immich.Organizer.App
+      dockerfile: Dockerfile
+    environment:
+      - IMMICH_ORGANIZER_CONFIG_PATH=/app/Immich_Organizer_App.json
+    volumes:
+      - ./Immich_Organizer_App.json:/app/Immich_Organizer_App.json
+    restart: on-failure

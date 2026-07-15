@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Immich.Organizer.App": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageReference Include="NSwag.MSBuild" Version="14.7.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<Target Name="NSwag" AfterTargets="PreBuildEvent">
+		<Exec Command="$(NSwagExe) openapi2csclient /input:immich-openapi-specs.json /classname:ImmichClient /namespace:Immich.Client /output:ImmichClient.cs /GenerateNullableReferenceTypes:true /GenerateOptionalPropertiesAsNullable:true" />
+	</Target>
+
+</Project>
