@@ -30,7 +30,7 @@ namespace Immich.Organizer.Core
                 organizerUsers.Add(userBuild);
             }
 
-            if(organizerUsers.Count == 0)
+            if (organizerUsers.Count == 0)
             {
                 buildLogger.LogWarning("Не удалось создать движок для группировки медиа т.к. данные конфигурации пустые или не корректны");
                 return null;

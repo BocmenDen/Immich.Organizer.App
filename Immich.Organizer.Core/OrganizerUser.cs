@@ -26,12 +26,7 @@ namespace Immich.Organizer.Core
 
         public static async Task<OrganizerUser?> Build(string host, OrganizerUserConfig organizerUserConfig, ILogger buildLogger)
         {
-            HttpClient httpClient = new()
-            {
-                BaseAddress = new Uri(host)
-            };
-            httpClient.DefaultRequestHeaders.Add("x-api-key", organizerUserConfig.ApiKey);
-            ImmichClient immichClient = new(httpClient);
+            ImmichClient immichClient = ImmichClientBuilder.Build(host, organizerUserConfig.ApiKey);
 
             if (!(await immichClient.IsConnect()))
             {
@@ -46,11 +41,9 @@ namespace Immich.Organizer.Core
             List<AlbumSynchronizer> albumSynchronizers = [];
             foreach (var (idAlbum, albumConfig) in organizerUserConfig.AlbumConfigs)
             {
-                var albumSynchronizer = await CreateAlbumSynchronizer(immichClient, idAlbum, albumConfig, userName, buildLogger);
+                var albumSynchronizer = await CreateAlbumSynchronizer(immichClient, idAlbum, albumConfig, buildLogger);
                 if (albumSynchronizer != null)
-                {
                     albumSynchronizers.Add(albumSynchronizer);
-                }
             }
 
             if (albumSynchronizers.Count == 0)
@@ -62,7 +55,7 @@ namespace Immich.Organizer.Core
             return new OrganizerUser(albumSynchronizers, userName);
         }
 
-        private static async Task<AlbumSynchronizer?> CreateAlbumSynchronizer(ImmichClient immichClient, Guid albumId, AlbumConfig albumConfig, string userName, ILogger buildLogs)
+        private static async Task<AlbumSynchronizer?> CreateAlbumSynchronizer(ImmichClient immichClient, Guid albumId, AlbumConfig albumConfig, ILogger buildLogs)
         {
             try
             {
