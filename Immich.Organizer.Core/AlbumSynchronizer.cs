@@ -65,23 +65,6 @@ namespace Immich.Organizer.Core
                         (chankItem) => client.TagAssetsAsync(config.TagId.Value, new BulkIdsDto() { Ids = chankItem }, cancellationToken),
                         "Успешно присвоена метка {count} файлам"
                     );
-
-                //// По непонятным причинам иногда фото помечаются конфликтным тегом хотя полностью удовлетворяют условиям
-                //// Для решения данной проблемы выполним поиск таких элементов
-                //var fullConflictTagSearch = await _client.SearchAllAssetsAsync(new MetadataSearchDto()
-                //{
-                //    TagIds = [_config.TagId.Value]
-                //}, cancellationToken).Select(x => x.Id).ToHashSetAsync(cancellationToken: cancellationToken);
-
-                //var fixElements = fullConflictTagSearch.Intersect(targetIds).ToList();
-
-                //if (fixElements.Any()) {
-                //    logger.LogInformation("Найденно {count} ошибочно помеченных файлов тегом", fixElements.Count);
-                //    await _client.UntagAssetsAsync(_config.TagId.Value, new BulkIdsDto()
-                //    {
-                //        Ids = fixElements
-                //    }, cancellationToken);
-                //}
             }
 
             if (config.Mode == ConflictResolutionMode.Remove || config.Mode == ConflictResolutionMode.AddTagAndRemove)
@@ -106,6 +89,8 @@ namespace Immich.Organizer.Core
             var targetIds = new HashSet<Guid>();
             foreach (var filter in config.Filters)
             {
+                filter.WithDeleted ??= false;
+                filter.WithStacked ??= true;
                 await foreach (var assetId in client.SearchAllAssetsAsync(filter, cancellationToken))
                 {
                     targetIds.Add(assetId.Id);

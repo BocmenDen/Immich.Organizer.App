@@ -34,7 +34,7 @@ namespace Immich.Organizer.Core
                 return null;
             }
 
-            var userName = (await immichClient.GetMyUserAsync()).Name;
+            var userName = await immichClient.GetUserName();
 
             using var scopeUser = buildLogger.BeginScope(userName);
 

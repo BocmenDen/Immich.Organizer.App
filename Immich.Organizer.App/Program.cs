@@ -42,10 +42,11 @@ namespace Immich.Organizer.App
             catch (Exception e)
             {
                 loggerInit.LogCritical(e, "Не удалось десериализовать конфигурацию.");
+                return;
             }
             scopeConfigFind?.Dispose();
 
-            var engine = await OrganizerEngine.Build(config!, loggerInit);
+            var engine = await OrganizerEngine.Build(config, loggerInit);
 
             if (engine == null)
                 return;
@@ -61,7 +62,7 @@ namespace Immich.Organizer.App
                     using var scopeError = logger.BeginScope(nameof(Program));
                     logger.LogWarning(e, "При выполнении организации объектов произошла ошибка");
                 }
-                await Task.Delay(config!.TimeSpan);
+                await Task.Delay(config.Timer);
             }
         }
 
